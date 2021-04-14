@@ -2,15 +2,15 @@ import numpy as np
 from error_calculator import *
 
 
+def test_function(x):
+    return x ** (-1) - np.tan(x)
+
+
 def range_control(a, b):
-    if (a*b < 0):
+    if (test_function(a)*test_function(b) < 0):
         return True
     else:
         return False
-
-
-def test_function(x):
-    return x ** (-1) - np.tan(x)
 
 
 def ask_for_data():
@@ -56,8 +56,8 @@ def bisection_function(a, b, iterations, error):
 
 def run():
     print('*** Metodo de biseccion ***\n\nIngrese el intervalo donde desea calcular la raiz de la funcion')
-    a = int(input('\nIngrese el primer valor del intervalo: '))
-    b = int(input('\nIngrese el segundo valor del intervalo: '))
+    a = float(input('\nIngrese el primer valor del intervalo: '))
+    b = float(input('\nIngrese el segundo valor del intervalo: '))
     if range_control(a, b):
         data_array = ask_for_data()
         if data_array[0] == 0:
