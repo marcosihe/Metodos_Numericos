@@ -1,71 +1,56 @@
 import numpy as np
-from error_calculator import *
+# from error_calculator import *
 
 
-def test_function(x):
+def f(x):
     return x ** (-1) - np.tan(x)
+    # return np.sin(x)
 
 
-def range_control(a, b):
-    if (test_function(a)*test_function(b) < 0):
-        return True
+def approximate_error(x0, x1):
+    return np.abs((x1-x0)/x1)
+
+
+def convergence_control(index, max_iterations, current_zero):
+    if index >= max_iterations:
+        print("El metodo no converge con el error deseado en " +
+              str(max_iterations) + " iteraciones")
+        print("Ultimo valor obtenido para la raiz: " + str(current_zero))
     else:
-        return False
+        print("La raiz de la funcion dada es: " + str(current_zero))
+        print("Y converge a la misma en " + str(index) + " iteraciones")
 
 
-def ask_for_data():
-    count_1 = 0
-    count_2 = 0
-
-    while True:
-        iterations = int(
-            input('\nIngrese la cantidad maxima de iteraciones: '))
-        count_1 += 1
-        if (iterations > 0 or count_1 > 2):
-            break
-    if count_1 < 3:
-        while True:
-            error = float(input('\nIngrese el maximo error relativo: '))
-            count_2 += 1
-            if (error > 0 or count_2 > 2):
-                break
-    if count_1 > 2 or count_2 > 2:
-        data_array = ([0, 0])
-        return data_array
+def bisection_method(a, b, max_iterations, error):
+    z1 = b
+    if f(a)*f(b) > 0:
+        print("El intervalo ingresado no contiene a la raiz de la funcion dada")
     else:
-        data_array = np.array([iterations, error])
-        return data_array
-
-
-def bisection_function(a, b, iterations, error):
-    zero = (a+b)/2
-    index = 1
-    while (index <= iterations and np.abs(test_function(zero)) > error):
-        if test_function(a)*test_function(zero) < 0:
-            a = zero
-        else:
-            b = zero
-        #print('Erro de la ' + str(index) + 'º iteracion: ' + relative_error())
-        index += 1
+        index = 1
         zero = (a+b)/2
-    if index > iterations:
-        print('\nNo converge en ' + str(iterations) + ' iteraciones.')
-    else:
-        print('\nel cero de la funcion dada es: ' + str(zero))
+        z0 = zero
+        # while(index < max_iterations and np.abs(b-a) > error):
+        while(index < max_iterations and approximate_error(z0, z1) > error):
+            if f(a)*f(zero) > 0:
+                a = zero
+            else:
+                b = zero
+            if index > 1:
+                print("\nError aproximado de la iteracion " +
+                      str(index) + ": " + str(approximate_error(z0, z1)))
+            zero = (a+b)/2
+            z1 = zero
+            index += 1
+        convergence_control(index, max_iterations, zero)
 
 
 def run():
     print('*** Metodo de biseccion ***\n\nIngrese el intervalo donde desea calcular la raiz de la funcion')
+    error = 10**-3
     a = float(input('\nIngrese el primer valor del intervalo: '))
     b = float(input('\nIngrese el segundo valor del intervalo: '))
-    if range_control(a, b):
-        data_array = ask_for_data()
-        if data_array[0] == 0:
-            print('Ingreso incorrecto de datos.\nFin del programa')
-        else:
-            bisection_function(a, b, data_array[0], data_array[1])
-    else:
-        print('\nIntervalo de la funcion no valido para el metodo de biseccion.')
+    iterations = int(input("Establecer el numero maximo de iteraciones: "))
+    bisection_method(a, b, iterations, error)
 
 
 if __name__ == '__main__':

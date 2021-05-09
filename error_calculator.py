@@ -14,8 +14,8 @@ def run():
     true_value = float(input('Ingrese el valor exacto o valor verdadero: '))
     approx_value = float(input('\nIngrese el valor medido o aproximado: '))
 
-    print('\nEl error absoluto es: ' +
-          str(absolute_error(true_value, approx_value)))
+    # print('\nEl error absoluto es: ' +
+    #      str(absolute_error(true_value, approx_value)))
     print('\nEl error relativo es: ' +
           str(relative_error(true_value, approx_value)*100) + ' %')
 
